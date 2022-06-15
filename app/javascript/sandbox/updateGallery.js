@@ -6,7 +6,7 @@ const updateGallery = async (galleryInfo) => {
       photo: galleryInfo.blobSignedId
     }
   }
-  console.log('Hi')
+  
   try {
     return axios.put(`/galleries/${galleryInfo.id}`, data, {
       headers: {

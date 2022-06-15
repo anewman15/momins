@@ -1,69 +1,75 @@
-import React, { useState, useRef } from 'react';
-// import { PropTypes } from 'prop-types';
-// import saveCurrentUser from '../../redux/actions/user';
-// import fileHash from '../../utils/fileHash';
-// import getPresignedUrl from '../../sandbox/getPresignedUrl';
-// import storeToCloudinary from '../../sandbox/storeToCloudinary';
-// import updateProfileImage from '../../sandbox/updateProfileImage';
+import React, { useState, useRef } from 'react'
+import fileHash from '../sandbox/fileHash'
+import getPresignedUrl from '../sandbox/getPresignedUrl'
+import storeToCloudinary from '../sandbox/storeToCloudinary'
+import updateGallery from '../sandbox/updateGallery'
 
 const UploadPhotoForm= ({ currentUser, saveCurrentUser }) => {
-  const [imageFile, setImageFile] = useState(null);
-  // const imageFileInput = useRef();
-  // const [profileImageUrl, setProfileImageUrl] = useState('');
+  const [imageFile, setImageFile] = useState(null)
+  const imageFileInput = useRef()
+  const [uploadPhotoRequest, setUploadPhotoRequest] = useState({})
 
 
-  const fileChangeHandler = event => setImageFile(event.target.files[0]);
+  const fileChangeHandler = event => setImageFile(event.target.files[0])
 
-  // const resetImageForm = () => {
-  //   imageFileInput.current.value = '';
-  //   setImageFile(null);
-  // };
+  const resetImageForm = () => {
+    imageFileInput.current.value = null
+  }
 
-  // const handleProfileImageUpload = async e => {
-  //   e.preventDefault();
+  const addNewPhoto = async e => {
+    e.preventDefault()
 
-  //   const md5Hash = await fileHash(imageFile);
-
-  //   let presignedUrlParams = {};
-  //   getPresignedUrl(userInfo.fileBinary, md5Hash)
-  //     .then(response => {
-  //       if (response.status === 200) {
-  //         return response.json();
-  //       }
-  //     })
-  //     .then(data => {
-  //       presignedUrlParams = data;
-  //       storeToCloudinary(presignedUrlParams, userInfo.fileBinary)
-  //         .then(response => {
-  //           if (response.status === 200) {
-  //             updateProfileImage(userInfo, presignedUrlParams.blob_signed_id)
-  //               .then(response => response.json())
-  //               .then(data => {
-  //                 if (data.status === 'success') {
-  //                   setProfileImageUrl(data.profile_image_url);
-  //                   updatedCurrentUser.profile_image_url = data.profile_image_url;
-  //                   saveCurrentUser(updatedCurrentUser);
-  //                   resetImageForm();
-  //                 }
-  //               })
-  //           }
-  //         })
-  //     })
-  // }
-
-  console.log(imageFile)
-
+    try {
+      const md5Hash = await fileHash(imageFile)
+      let presignedUrlParams = {}
+      getPresignedUrl(imageFile, md5Hash)
+        .then(response => {
+          if (response.status === 200) {
+            presignedUrlParams = response.data
+            storeToCloudinary(presignedUrlParams, imageFile)
+              .then(response => {
+                if (response.status === 200) {
+                  const galleryInfo = {
+                    id: 10,
+                    blobSignedId: presignedUrlParams.blob_signed_id
+                  }
+                  updateGallery(galleryInfo)
+                    .then(response => {
+                      if (response.status == 200) {
+                        setUploadPhotoRequest({ success: response.data.message })
+                        resetImageForm()
+                      }
+                    })
+                }
+              })
+          }
+        })
+    } catch (error) {
+      uploadPhotoRequest({error: error.message})
+      console.log(uploadPhotoRequest)
+    }
+  }
   return (
     <div className="mx-auto p-2">
       <form
         className="p-2"
-        // onSubmit={handleProfileImageUpload}
+        onSubmit={addNewPhoto}
       >
         <div className="d-flex flex-column">
           <div className="">
+            {
+              uploadPhotoRequest.success &&
+              <div className="alert alert-success">
+                <span>
+                  { uploadPhotoRequest.success }
+                </span>
+              </div>
+            }
             <label htmlFor="new-photo" className="form-label"></label>
-            <input className="form-control form-control-sm"
+            <input
+              className="form-control form-control-sm"
               id="new-photo"
+              ref={imageFileInput}
               type="file"
               onChange={fileChangeHandler}
             />
