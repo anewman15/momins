@@ -22,7 +22,6 @@ class GalleriesController < ApplicationController
     else
       render json: { "status": 422, "message": 'Photo not added.' }, status: :unprocessable_entity
     end
-
   end
 
   private
