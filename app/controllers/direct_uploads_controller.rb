@@ -1,0 +1,2 @@
+class DirectUploadsController < ApplicationController
+end
