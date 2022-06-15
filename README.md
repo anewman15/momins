@@ -1,6 +1,6 @@
 # Momins
 
-### This is a very basic photo gallery app
+### This is a basic photo gallery app
 
 ## Built With
 1. Ruby on Rails v 6.1.6
