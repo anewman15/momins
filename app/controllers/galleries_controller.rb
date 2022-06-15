@@ -1,4 +1,6 @@
 class GalleriesController < ApplicationController
+  skip_before_action :verify_authenticity_token
+
   def index
     galleries = Gallery.all.with_attached_photos
     @gallery = galleries.first
@@ -16,11 +18,11 @@ class GalleriesController < ApplicationController
   def update
     @gallery = Gallery.find_by(id: params[:id])
 
-    photo = params[:photo] if params[:photo]
+    photo = params[:gallery][:photo] if params[:gallery][:photo]
 
-    if @gallery.exists?
+    if @gallery.present?
       @gallery.photos.attach(photo) if photo
-      render :photo_added
+      render json: { "status": 200, "message": 'Photo added successfully!' }, status: :ok
     else
       render json: { "status": 422, "message": 'Photo not added.' }, status: :unprocessable_entity
     end
