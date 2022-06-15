@@ -18,6 +18,7 @@
 7. Run `rails server` to start the server
 8. Navigate to `http://localhost:3000` in your browser
 9. Look around and try adding new photos
+10. Please keep yourself connected to the Internet, as this app uses Cloudinary to store the photos. Both for `development` and `production`
 
 ## Author
 👤 **Abdullah Numan**
