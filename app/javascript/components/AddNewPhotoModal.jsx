@@ -1,7 +1,7 @@
 import React from 'react'
 import UploadPhotoForm from './UploadPhotoForm'
 
-const AddNewPhotoModal = () => {
+const AddNewPhotoModal = ({ galleryId }) => {
   return (
     <div>
       <div className="modal fade" id="upload-photo-modal" data-bs-backdrop="static" data-bs-keyboard="false" tabIndex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -12,7 +12,7 @@ const AddNewPhotoModal = () => {
               <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div className="modal-body mb-0">
-              <UploadPhotoForm />
+              <UploadPhotoForm galleryId={galleryId}/>
             </div>
           </div>
         </div>

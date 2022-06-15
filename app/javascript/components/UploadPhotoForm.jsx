@@ -4,7 +4,7 @@ import getPresignedUrl from '../sandbox/getPresignedUrl'
 import storeToCloudinary from '../sandbox/storeToCloudinary'
 import updateGallery from '../sandbox/updateGallery'
 
-const UploadPhotoForm= ({ currentUser, saveCurrentUser }) => {
+const UploadPhotoForm= ({ galleryId }) => {
   const [imageFile, setImageFile] = useState(null)
   const imageFileInput = useRef()
   const [uploadPhotoRequest, setUploadPhotoRequest] = useState({})
@@ -30,7 +30,7 @@ const UploadPhotoForm= ({ currentUser, saveCurrentUser }) => {
               .then(response => {
                 if (response.status === 200) {
                   const galleryInfo = {
-                    id: 10,
+                    id: galleryId,
                     blobSignedId: presignedUrlParams.blob_signed_id
                   }
                   updateGallery(galleryInfo)
@@ -46,9 +46,9 @@ const UploadPhotoForm= ({ currentUser, saveCurrentUser }) => {
         })
     } catch (error) {
       uploadPhotoRequest({error: error.message})
-      console.log(uploadPhotoRequest)
     }
   }
+
   return (
     <div className="mx-auto p-2">
       <form
