@@ -1,6 +1,8 @@
 class GalleriesController < ApplicationController
   def index
-    @galleries = Gallery.all
+    galleries = Gallery.all.with_attached_photos
+    @gallery = galleries.first
+    render json: @gallery
   end
 
   # def show
